@@ -1,0 +1,31 @@
+<html>
+   <head>
+      <link rel='stylesheet' href='/static/css/main.css'></link>
+      {% block style %} {% end %}
+   </head>
+   <body>
+   <div id='wrapper'>
+      <div id='site-topbar' class='topbar'>
+         <div id='site-info'>
+            <div id='site-logo' class='logo'></div>         
+            <div id='site-name' class='sitename'><a href='/'>[ Dashticker_ ]</a></div>
+         </div>
+         <div id='site-nav' class='nav-menu'>
+            <a class='nav-item' href='/about'>About</a>
+            <a class='nav-item' href='/contact'>Contact</a>
+            <a class='nav-item' href='/login'>Login</a>
+         </div>
+      </div>
+      <div id='site-content' class='container'>
+      {% block content %}{% end %}
+      </div>
+      <div id='site-footer' class='footer'>
+         Developed by j-watanabe. (c) 2016 <a href='/'>dashticker.com</a>.
+      </div>
+   </div>
+   <script>
+   </script>
+   <script src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+   {% block script %}{% end %}
+   </body>
+</html>

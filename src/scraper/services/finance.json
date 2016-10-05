@@ -1,0 +1,115 @@
+{
+   "sources": [
+      {
+         "proxy": {
+            "host": "",
+            "port": ""
+         },
+         "url": "http://finance.google.com/finance/info?infotype=infoquoteall?q={symbols}",
+         "name": "google_finance_info",
+         "type": "json",
+         "query_strings": {
+            "symbols": "list"
+         },
+         "data_fields": {
+            "t": "symbol",
+            "e": "exchange",
+            "l": "price",
+            "l_fix": "price_fix",
+            "l_cur": "price_current",
+            "hi52": "price_hi52",
+            "lo52": "price_lo52",
+            "op": "price_open",
+            "hi": "price_hi",
+            "lo": "price_lo",
+            "c": "change",
+            "c_fix": "change_fix",
+            "l_dts": "timestamp",
+            "vo": "volume",
+            "avvo": "avg_volume",
+            "mc": "market_cap",
+            "pe": "pe",
+            "fwpe": "fwpe",
+            "beta": "beta",
+            "eps": "eps",
+            "shares": "shares",
+            "name": "name"
+         }
+      },
+      {
+         "proxy": {
+            "host": "",
+            "port": ""
+         },
+         "url": "http://finviz.com/quote.ashx?t={symbol}",
+         "name": "finviz_stock_info",
+         "type": "webpage",
+         "query_strings": {
+            "symbol": "str"
+         }         
+      },
+      {
+         "proxy": {
+            "host": "",
+            "port": ""
+         },
+         "url": "https://www.sec.gov/cgi-bin/browse-edgar?type=10-k?CIK={symbol}",
+         "name": "sec_10k_list",
+         "type": "webpage",
+         "query_strings": {
+            "symbol": "str"
+         }
+      },
+      {
+         "proxy": {
+            "host": "",
+            "port": ""
+         },
+         "url": "https://www.sec.gov/cgi-bin/browse-edgar?type=10-q?CIK={symbol}",
+         "name": "sec_10q_list",
+         "type": "webpage",
+         "query_strings": {
+            "symbol": "str"
+         }
+      },
+      {
+         "proxy": {
+            "host": "",
+            "port": ""
+         },
+         "url": "https://www.sec.gov/Archives/edgar/data/{sec_symbol_id}/{sec_report_id}/R5.htm",
+         "name": "balance_sheet",
+         "type": "webpage",
+         "query_strings": {
+            "sec_symbol_id": "int",
+            "sec_report_id": "int"
+         }
+      },
+      {
+         "proxy": {
+            "host": "",
+            "port": ""
+         },
+         "url": "https://www.sec.gov/Archives/edgar/data/{sec_symbol_id}/{sec_report_id}/R3.htm",
+         "name": "income_statement",
+         "type": "webpage",
+         "query_strings": {
+            "sec_symbol_id": "int",
+            "sec_report_id": "int"
+         }
+      },
+      {
+         "proxy": {
+            "host": "",
+            "port": ""
+         },
+         "url": "https://www.sec.gov/Archives/edgar/data/{sec_symbol_id}/{sec_report_id}/R8.htm",
+         "name": "cashflow_statement",
+         "type": "webpage",
+         "query_strings": {
+            "sec_symbol_id": "int",
+            "sec_report_id": "int"
+         }
+      }      
+   ]
+}
