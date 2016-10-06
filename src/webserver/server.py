@@ -1,7 +1,9 @@
 import config, services, logging, signal
 from tornado import web, ioloop, gen, httpserver, netutil, process
+from scraper import uvloop
 
 logger = logging.getLogger(__name__)
+ioloop.IOLoop.configure(uvloop.UVLoop)
 
 class Application(web.Application):
    def __init__(self, config, db=None):
@@ -9,7 +11,11 @@ class Application(web.Application):
       self.db = db
 
 def app_handlers():
-   handlers = services.pages.handlers()
+   bot = services.bot.CommonBot(host='0.0.0.0', port=9000)
+   bot.start()
+   handlers = services.pages.handlers() + \
+              services.chat.handlers(bot=bot)
+            
 
    return handlers
 
@@ -39,7 +45,7 @@ def run(run_config=None):
    num_processes = run_config['server_config']['num_processes']
    
    sockets = netutil.bind_sockets(port)
-   process.fork_processes(num_processes)
+   #process.fork_processes(num_processes)
 
    server = httpserver.HTTPServer(app)
    server.add_sockets(sockets)

@@ -11,7 +11,7 @@ app_config = {
    'static_path': STATIC_PATH,
    'compress_response': True,
    'cookie_secret': cookie_secret,
-   'debug': False
+   'debug': True
 }
 
 server_config = {

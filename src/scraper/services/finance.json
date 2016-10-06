@@ -5,7 +5,7 @@
             "host": null,
             "port": null
          },
-         "url_pattern": "http://finance.google.com/finance/info?infotype=infoquoteall?q={symbols}",
+         "url_pattern": "http://finance.google.com/finance/info?infotype=infoquoteall&q={symbols}",
          "name": "google_finance_info",
          "type": "json",
          "data_fields": {
@@ -21,7 +21,7 @@
             "lo": "price_lo",
             "c": "change",
             "c_fix": "change_fix",
-            "l_dts": "timestamp",
+            "lt_dts": "timestamp",
             "vo": "volume",
             "avvo": "avg_volume",
             "mc": "market_cap",

@@ -7,7 +7,7 @@ body {
 
 #wrapper {
    margin:auto;
-   width: 68%;
+   width: 60%;
    padding-left: 5px;
    padding-right: 5px;
    border
@@ -66,6 +66,7 @@ body {
    right: 0;
    bottom: 0;
    left: 0;
+   margin-top: 20px;
    padding: 1rem;
    background-color: #efefef;
    text-align: center;
@@ -75,4 +76,100 @@ body {
    margin-top: 20px;
    margin-left: 50px;
    margin-right: 50px;
+}
+
+/* COLORS */
+
+
+/* chatbox */
+.chatbox {
+   width: 80%;
+   margin: auto;
+}
+
+.chatbox-input {
+   margin-bottom: 20px;
+}
+
+.input-text {
+   border: 1px solid #333;
+   border-radius: 4px;   
+}
+
+.input-text:focus {
+   outline: 0!important;
+   border: 1px solid #F3D03F;
+}
+
+.chatbox-input .input-text {
+   width: 300px;
+   height: 27px;
+   font-size:15px;
+   max-width: 70%;
+   max-height: 10%;
+}
+
+.chatbox-output {
+   border: 1px solid #333;
+   display: block;
+   height: 70%;
+   max-height: 70%;
+   overflow: scroll;   
+}
+
+.chatbox-output table {
+   width: 100%;
+}
+
+.chatbox-output table tr {
+   width: 100%;
+   display: inherit;
+   margin-bottom: 5px;
+}
+
+.chatbox-output table .msg {
+   padding-top:7px;
+   padding-bottom:7px;
+   border-radius: 8px;
+   padding-left: 10px;
+   padding-right: 20px;
+}
+
+.chatbox-output table td.msg.user {
+   float: left;
+   background: #F2508F;
+   color: white;
+}
+
+.chatbox-output table td.msg.bot {
+   padding-left: 10px;
+   float:right;
+   background: gold;
+   color: #333;
+}
+
+/* BUTTONS */
+
+.button {
+   border: 1px solid #ddd !important;
+   padding-left: 15px;
+   padding-right: 15px;
+   padding-bottom: 7px;
+   padding-top: 7px;
+   min-width: 50px;
+   border-radius: 4px;   
+}
+
+.button:focus{
+   outline: 0!important;
+}
+
+.button.submit {
+   background: #F2508F;
+   color: white;
+}
+
+.button.submit:hover {
+   background: gold;
+   color: #333;
 }

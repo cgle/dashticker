@@ -1,5 +1,19 @@
 {% extends "layout.html" %}
 
-{% block content %}
+{% block script %}
+<script src='/static/js/bot.js'></script>
+{% end %}
 
+{% block content %}
+<div class='chatbox' id='main-chatbox'>
+   <div class='chatbox-input' id='chatbox-input'>
+      <input type='text' class='input-text' name='chatbox-input-text'>
+      <input type='submit' class='button submit' value='Send' name='chatbox-input-send'>
+   </div>
+   <div class='chatbox-output' id='chatbox-output'>
+      &nbsp;
+      <table>
+      </table>
+   </div>
+</div>
 {% end %}

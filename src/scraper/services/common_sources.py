@@ -2,12 +2,13 @@ import logging, functools
 import datetime, time, ujson, lxml, re
 from tornado import ioloop, gen, httpclient, netutil
 import socket
+import uuid
 
 logger = logging.getLogger(__name__)
 
 class CommonSource(object):
    _source_type = None
-   def __init__(self, name, description, url_pattern,
+   def __init__(self, name=None, description=None, url_pattern=None,
                       req_timeout=None, conn_timeout=None, proxy=None,
                       start_time=None, stop_time=None, io_loop=None, http_client=None):
 
@@ -40,8 +41,8 @@ class CommonSource(object):
       logger.debug('FETCHING {}'.format(url))
       response = None
       try:
-         proxy_host = proxy['host'] if proxy else None
-         proxy_port = proxy['port'] if proxy else None
+         proxy_host = self._proxy['host'] if self._proxy else None
+         proxy_port = self._proxy['port'] if self._proxy else None
          req = httpclient.HTTPRequest(url,
                                       method='GET',
                                       connect_timeout=self._conn_timeout,
@@ -50,6 +51,7 @@ class CommonSource(object):
                                       proxy_port=proxy_port)
 
          response = yield self.http_client.fetch(req)
+
       except httpclient.HTTPError as e:
          logger.error('FETCH URL HTTPERROR: {}'.format(e))
       except Exception, e:
@@ -72,8 +74,8 @@ class CommonSource(object):
    @gen.coroutine
    def _default_timer_callback(self, url):
       response = yield self.fetch(url=url)
-      #if response is not None:
-         #logger.debug('FETCHED: {}'.format(response.body))
+      if response is not None:
+         logger.debug('FETCHED: {}'.format(response.body))
          
       raise gen.Return(response)
    
@@ -87,7 +89,9 @@ class CommonSource(object):
       self._timers[url] = self.io_loop.add_timeout(interval, self._handle_on_timer, 
                                                    interval, url, timer_callback=timer_callback)
 
-   def start_timer(self, url=None, interval=None, timer_callback=None,):
+   def start_timer(self, url=None, url_args=None, interval=None, timer_callback=None,):
+      url = url if url else self.get_url(**url_args)
+
       if url in self._timers:
          logger.debug('{} timer already running'.format(url))
          return
@@ -127,9 +131,11 @@ class JSONSource(CommonSource):
    def load_from_spec(cls, spec, io_loop=None, http_client=None):
       logging.debug('loading new JSONSource object from spec')
       try:
-         if spec['type'] != cls._source_type
-            raise ValueError('invalid source type')
          data_fields = spec.pop('data_fields')
+         stype = spec.pop('type')
+         if stype != cls._source_type:
+            raise ValueError('invalid source type')
+
          return JSONSource(data_fields, io_loop=io_loop, http_client=http_client, **spec)
       except Exception, e:
          raise
@@ -142,8 +148,14 @@ class JSONSource(CommonSource):
          data = ujson.loads(raw_data[self._json_start_regex.search(raw_data).start():])
       except ValueError, e:
          raise
+      
+      if type(data) == list:
+         return [self._serialize(x) for x in data]
+      else:
+         return self._serialize(data)
 
-      return {v: data[k] for k,v in self._data_fields}
+   def _serialize(self, obj):
+      return {v: obj[k] for k,v in self._data_fields.iteritems()}
 
    def get_data_fields(self):
       return self._data_fields
@@ -168,12 +180,25 @@ class WebpageSource(CommonSource):
       pass
 
 class CommonScraper(object):
-   def __init__(self, port):
+   def __init__(self, name, tcp_server=None):
       self.io_loop = ioloop.IOLoop.instance()
       self.http_client = httpclient.AsyncHTTPClient()
-      
       self.sources = {}
-      self.sock = None
+      self.tcp_server = tcp_server
+      self.name = name
 
-   def add_source(self, spec):
-      pass
+      self.tcp_server.add_scraper(self)      
+
+   def add_source(self, s):
+      self.sources[s.name] = s
+
+   def remove_source(self, name):
+      try:
+         del self.sources[name]
+      except KeyError, e:
+         logger.error(e)
+   
+   @gen.coroutine
+   def fetch(self, **kwargs):
+      response = yield self.sources['google_finance_info'].fetch(**kwargs)
+      raise gen.Return(response)
