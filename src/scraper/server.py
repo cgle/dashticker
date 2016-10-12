@@ -20,13 +20,16 @@ def setup_scrapers(port):
    http_client = httpclient.AsyncHTTPClient(io_loop=io_loop)
    scraper_server = scraper_tcp_server.ScraperTCPServer()
    scraper_server.listen(port)
+   
 
-   finance_fp = os.path.join(config.DIRNAME, 'services', 'finance.json')   
-   sources = ujson.loads(open(finance_fp, 'r').read())['sources']   
-   google_source = common_sources.JSONSource.load_from_spec(sources[0], io_loop=io_loop, http_client=http_client)
+   # load sources from json
+   finance_fp = os.path.join(config.DIRNAME, 'services', 'finance.json')
+   finance_sources = ujson.loads(open(finance_fp, 'r').read())['sources']   
 
-   scraper = common_sources.CommonScraper('finance', tcp_server=scraper_server)
-   scraper.add_source(google_source)
+   google_source = common_sources.JSONSource.load_from_spec(finance_sources[0], io_loop=io_loop, http_client=http_client)
+
+   main_scraper = common_sources.CommonScraper('finance', tcp_server=scraper_server)
+   main_scraper.add_source(google_source)
    
 def run(run_config=None):
    signal.signal(signal.SIGINT, handle_signal)
@@ -44,6 +47,7 @@ def run(run_config=None):
    process.fork_processes(num_processes, max_restarts=1)
    io_loop = ioloop.IOLoop.current()
    
+   # setup scrapers
    setup_scrapers(port)
 
    io_loop.start()

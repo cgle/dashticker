@@ -1,0 +1,15 @@
+syntax = "proto3";
+package message_factory;
+
+message InputMsg {
+   string bot_hid = 1;
+   string scraper_name = 2;
+   string source_name = 3;
+   string fetch_kwargs = 4;
+   string query_kwargs = 5;
+}
+
+message OutputMsg {
+   string bot_hid = 1;
+   string msg = 2;
+}

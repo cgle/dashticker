@@ -2,8 +2,8 @@
    "sources": [
       {
          "proxy": {
-            "host": null,
-            "port": null
+            "host": "210.101.131.231",
+            "port": 8080
          },
          "url_pattern": "http://finance.google.com/finance/info?infotype=infoquoteall&q={symbols}",
          "name": "google_finance_info",

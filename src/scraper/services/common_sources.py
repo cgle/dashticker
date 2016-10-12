@@ -160,8 +160,8 @@ class JSONSource(CommonSource):
    def get_data_fields(self):
       return self._data_fields
 
-   def query(self, cmd):
-      pass
+   def query(self, obj, **kwargs):
+      return ' '.join(["{}={}".format(o['symbol'], o['price_fix']) for o in obj])
 
 class WebpageSource(CommonSource):
    _source_type='webpage'
@@ -176,7 +176,7 @@ class WebpageSource(CommonSource):
    def parse(self, raw_data):
       pass
 
-   def query(self, cmd):
+   def query(self, *args, **kwargs):
       pass
 
 class CommonScraper(object):
@@ -186,7 +186,6 @@ class CommonScraper(object):
       self.sources = {}
       self.tcp_server = tcp_server
       self.name = name
-
       self.tcp_server.add_scraper(self)      
 
    def add_source(self, s):
@@ -196,9 +195,10 @@ class CommonScraper(object):
       try:
          del self.sources[name]
       except KeyError, e:
-         logger.error(e)
+         logger.error(e)         
    
-   @gen.coroutine
-   def fetch(self, **kwargs):
-      response = yield self.sources['google_finance_info'].fetch(**kwargs)
-      raise gen.Return(response)
+   def get_source(self, name):
+      try:
+         return self.sources[name]
+      except KeyError, e:
+         raise
