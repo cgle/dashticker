@@ -14,6 +14,7 @@ class CommonSource(object):
 
       self._req_timeout = req_timeout if req_timeout else 5
       self._conn_timeout = conn_timeout if conn_timeout else 5
+      # TODO: randomize proxy
       self._proxy = proxy
 
       self._default_interval = datetime.timedelta(seconds=15)

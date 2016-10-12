@@ -1,12 +1,10 @@
-from tornado import web, gen, ioloop, iostream, tcpclient
+from tornado import web, gen, ioloop, iostream, tcpclient, queues
 import logging, socket
 import time, datetime
 import struct, ujson
 from bridge import message_factory
 
 logger = logging.getLogger(__name__)
-
-
 
 class CommonBot(object):
    def __init__(self, host=None, port=None):
@@ -17,7 +15,8 @@ class CommonBot(object):
       self.handlers = {} 
       self.msg_factory = message_factory.MessageFactory()
       
-      #TODO delayed msg queues 
+      self._delay_timeouts = {}
+      self._delay_secs = datetime.timedelta(seconds=2)
 
    def add_handler(self, handler):
       self.handlers[handler.hid()] = handler
@@ -32,8 +31,15 @@ class CommonBot(object):
    def handle_ws_message(self, message, handler):      
       logger.debug('bot received message: {}'.format(message))
       message = message.encode('utf-8')
-      bot_hid = handler.hid()
       
+      # keep track of bot_ws handle id to return msg later on
+      bot_hid = handler.hid()      
+      
+      logger.debug('adding delay timeout to ioloop')
+      self._delay_timeouts[bot_hid] = self.io_loop.add_timeout(self._delay_secs, 
+                                                              self.send_message_to_client,
+                                                              bot_hid, 'processing...')
+
       #TODO: auto generate this
       scraper_name = 'finance'
       source_name = 'google_finance_info'
@@ -62,6 +68,10 @@ class CommonBot(object):
          self.stream.close()
          self.stream = None
 
+   def _reset_bridge(self):
+      self._close_bridge()
+      self._open_bridge()      
+
    @gen.coroutine
    def _handle_read_bridge(self):
       try:
@@ -73,7 +83,7 @@ class CommonBot(object):
             output_msg = self.msg_factory.decode_output(data)
             bot_hid = output_msg.bot_hid
             msg = output_msg.msg      
-            yield self.send_message_to_client(msg, bot_hid)
+            yield self.send_message_to_client(bot_hid, msg)
       except iostream.StreamClosedError, e:
          logger.error(e)
          self._close_bridge()
@@ -87,9 +97,16 @@ class CommonBot(object):
          logger.error(e)
    
    @gen.coroutine
-   def send_message_to_client(self, message, handler_hid):
+   def send_message_to_client(self, handler_id, message):
       try:
-         yield self.handlers[handler_hid].write_message(message)
+         self.io_loop.remove_timeout(self._delay_timeouts[handler_id])
+         logger.debug('removing delay timeout')         
+         del self._delay_timeouts[handler_id]
+      except KeyError:
+         pass
+
+      try:
+         yield self.handlers[handler_id].write_message(message)
       except Exception, e:
          logger.error(e)
 
