@@ -1,0 +1,22 @@
+{
+   "sources": [
+      {
+         "proxy": {
+            "host": null,
+            "port": null
+         },
+         "url_pattern": "http://api.openweathermap.org/data/2.5/weather?q={city}&apikey=f0ac8dd4050c8690153e075b27c4fded",
+         "name": "openweather_by_city",
+         "type": "json",
+         "data_fields": {
+            "coord": "coord",
+            "sys": "location",
+            "main": "main",
+            "weather": "weather",
+            "dt": "datetime",
+            "id": "city_id",
+            "name": "city_name"
+         }
+      }
+   ]
+}

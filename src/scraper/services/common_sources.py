@@ -3,6 +3,7 @@ import datetime, time, ujson, lxml, re
 from tornado import ioloop, gen, httpclient, netutil
 import socket
 import uuid
+import webpage_parsers
 
 logger = logging.getLogger(__name__)
 
@@ -155,6 +156,7 @@ class JSONSource(CommonSource):
       else:
          return self._serialize(data)
 
+   # TODO: nested serialize
    def _serialize(self, obj):
       return {v: obj[k] for k,v in self._data_fields.iteritems()}
 
@@ -162,44 +164,41 @@ class JSONSource(CommonSource):
       return self._data_fields
 
    def query(self, obj, **kwargs):
-      return ' '.join(["{}={}".format(o['symbol'], o['price_fix']) for o in obj])
+      if not kwargs:
+         return obj
+
+      out = {}
+      if type(obj) != list:
+         out = {k:obj[k] for k,w in kwargs.iteritems() if k in obj}
+      else:
+         out = [{k:o[k] for k,w in kwargs.iteritems() if k in o} for o in obj]
+      
+      return out
 
 class WebpageSource(CommonSource):
    _source_type='webpage'
 
-   def __init__(self):
-      pass
+   def __init__(self, parser, **kwargs):
+      super(JSONSource, self).__init__(**kwargs)      
+      self._parser = parser
    
    @classmethod
    def load_from_spec(cls, spec):
-      pass
+      logging.debug('loading new WebpageSource object from spec')
+      try:
+         stype = spec.pop('type')
+         if stype != cls._source_type:
+            raise ValueError('invalid source type')         
+         name = spec.pop('parser') if 'parser' in spec else 'default'
+         parser = webpage_parsers.load(name)
+
+         logging.debug('loaded source using {} parser'.format(name))
+         return WebpageSource(parser, **spec)
+      except Exception, e:
+         raise
 
    def parse(self, raw_data):
       pass
 
    def query(self, *args, **kwargs):
       pass
-
-class CommonScraper(object):
-   def __init__(self, name, tcp_server=None):
-      self.io_loop = ioloop.IOLoop.instance()
-      self.http_client = httpclient.AsyncHTTPClient()
-      self.sources = {}
-      self.tcp_server = tcp_server
-      self.name = name
-      self.tcp_server.add_scraper(self)      
-
-   def add_source(self, s):
-      self.sources[s.name] = s
-
-   def remove_source(self, name):
-      try:
-         del self.sources[name]
-      except KeyError, e:
-         logger.error(e)         
-   
-   def get_source(self, name):
-      try:
-         return self.sources[name]
-      except KeyError, e:
-         raise

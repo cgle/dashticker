@@ -40,7 +40,8 @@
          },
          "url_pattern": "http://finviz.com/quote.ashx?t={symbol}",
          "name": "finviz_stock_info",
-         "type": "webpage"
+         "type": "webpage",
+         "parser": "finviz"
       },
       {
          "proxy": {
@@ -49,7 +50,8 @@
          },
          "url_pattern": "https://www.sec.gov/cgi-bin/browse-edgar?type=10-k?CIK={symbol}",
          "name": "sec_10k_list",
-         "type": "webpage"
+         "type": "webpage",
+         "parser": "sec"
       },
       {
          "proxy": {
@@ -58,7 +60,8 @@
          },
          "url_pattern": "https://www.sec.gov/cgi-bin/browse-edgar?type=10-q?CIK={symbol}",
          "name": "sec_10q_list",
-         "type": "webpage"
+         "type": "webpage",
+         "parser": "sec"
       },
       {
          "proxy": {
@@ -67,7 +70,8 @@
          },
          "url_pattern": "https://www.sec.gov/Archives/edgar/data/{sec_symbol_id}/{sec_report_id}/R5.htm",
          "name": "balance_sheet",
-         "type": "webpage"
+         "type": "webpage",
+         "parser": "sec"
       },
       {
          "proxy": {
@@ -76,7 +80,8 @@
          },
          "url_pattern": "https://www.sec.gov/Archives/edgar/data/{sec_symbol_id}/{sec_report_id}/R3.htm",
          "name": "income_statement",
-         "type": "webpage"
+         "type": "webpage",
+         "parser": "sec"         
       },
       {
          "proxy": {
@@ -85,7 +90,8 @@
          },
          "url_pattern": "https://www.sec.gov/Archives/edgar/data/{sec_symbol_id}/{sec_report_id}/R8.htm",
          "name": "cashflow_statement",
-         "type": "webpage"
+         "type": "webpage",
+         "parser": "sec"         
       }      
    ]
 }

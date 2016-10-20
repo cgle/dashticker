@@ -2,7 +2,7 @@ from tornado import web, gen, ioloop, iostream, tcpclient, queues
 import logging, socket
 import time, datetime
 import struct, ujson
-from bridge import message_factory
+from bridge import message_factory, text_analyzer
 
 logger = logging.getLogger(__name__)
 
@@ -14,9 +14,10 @@ class CommonBot(object):
       self.stream = None
       self.handlers = {} 
       self.msg_factory = message_factory.MessageFactory()
+      self.txt_analyzer = text_analyzer.TextAnalyzer()
       
       self._delay_timeouts = {}
-      self._delay_secs = datetime.timedelta(seconds=2)
+      self._delay_secs = datetime.timedelta(seconds=3)
 
    def add_handler(self, handler):
       self.handlers[handler.hid()] = handler
@@ -31,25 +32,24 @@ class CommonBot(object):
    def handle_ws_message(self, message, handler):      
       logger.debug('bot received message: {}'.format(message))
       message = message.encode('utf-8')
+      message = message.lower()
       
       # keep track of bot_ws handle id to return msg later on
-      bot_hid = handler.hid()      
+      bot_hid = handler.hid()     
       
-      logger.debug('adding delay timeout to ioloop')
-      self._delay_timeouts[bot_hid] = self.io_loop.add_timeout(self._delay_secs, 
+      if bot_hid not in self._delay_timeouts:
+         logger.debug('adding delay timeout to ioloop')      
+         self._delay_timeouts[bot_hid] = self.io_loop.add_timeout(self._delay_secs, 
                                                               self.send_message_to_client,
                                                               bot_hid, 'processing...')
+      
+      try:
+         input_args = self.txt_analyzer.analyze(message)
+         input_msg = self.msg_factory.encode_input(bot_hid, *input_args)
+         yield self.send_message_to_bridge(input_msg)
 
-      #TODO: auto generate this
-      scraper_name = 'finance'
-      source_name = 'google_finance_info'
-      fetch_kwargs = {'symbols': message}
-      query_kwargs = {'symbol': None}
-
-      input_msg = self.msg_factory.encode_input(bot_hid, scraper_name, source_name, 
-                                                fetch_kwargs, query_kwargs)
-
-      yield self.send_message_to_bridge(input_msg)
+      except Exception, e:
+         yield self.send_message_to_client(bot_hid, str(e))
 
    @gen.coroutine
    def start(self):

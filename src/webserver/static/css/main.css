@@ -7,7 +7,7 @@ body {
 
 #wrapper {
    margin:auto;
-   width: 50%;
+   width: 80%;
    padding-left: 5px;
    padding-right: 5px;
    border
@@ -83,7 +83,7 @@ body {
 
 /* chatbox */
 .chatbox {
-   width: 80%;
+   width: 75%;
    margin: auto;
 }
 
@@ -114,7 +114,8 @@ body {
    display: block;
    height: 70%;
    max-height: 70%;
-   overflow: scroll;   
+   overflow: scroll;
+   border-radius: 4px;   
 }
 
 .chatbox-output table {
@@ -144,8 +145,16 @@ body {
 .chatbox-output table td.msg.bot {
    padding-left: 10px;
    float:right;
-   background: gold;
+   background: #ddd;
    color: #333;
+}
+
+[direction=neg] {
+   color: red;
+}
+
+[direction=pos] {
+   color: green;
 }
 
 /* BUTTONS */

@@ -24,7 +24,7 @@ class BotWSHandler(websocket.WebSocketHandler):
 
    def on_close(self):
       logger.debug('ws connection closed')
-      self.bot.remove_handler(self._uid)
+      self.bot.remove_handler(self._hid)
 
 def handlers(bot=None):
    return [

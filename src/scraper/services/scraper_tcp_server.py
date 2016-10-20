@@ -83,7 +83,21 @@ class ScraperTCPServer(tcpserver.TCPServer):
          source = scraper.get_source(source_name)
          response = yield source.fetch(**fetch_kwargs)
          obj = source.parse(response.body)
-         output_msg = source.query(obj, **query_kwargs)
+         out = source.query(obj, **query_kwargs)
+         
+         # add metadata
+         out = {
+            'content': out,
+            'scraper': scraper_name,
+            'source': source_name
+         }
+
+         # dumps to string output_msg
+         output_msg = ujson.dumps(out)
+      
+      except AttributeError, e:
+         output_msg = 'unable to fetch data, please try again'
+
       except Exception, e:
          output_msg = str(e)
           
