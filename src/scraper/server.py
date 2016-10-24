@@ -24,9 +24,11 @@ def setup_scrapers(port):
    finance_fp = os.path.join(config.DIRNAME, 'services', 'finance.json')   
    finance_sources = ujson.loads(open(finance_fp, 'r').read())['sources']   
    google_source = common_sources.JSONSource.load_from_spec(finance_sources[0], io_loop=io_loop, http_client=http_client)
-   
+   finviz_source = common_sources.WebpageSource.load_from_spec(finance_sources[1], io_loop=io_loop, http_client=http_client)
+
    finance_scraper = common_scrapers.CommonScraper('finance', tcp_server=scraper_server)
    finance_scraper.add_source(google_source)
+   finance_scraper.add_source(finviz_source)
 
    #weather scraper
    weather_fp = os.path.join(config.DIRNAME, 'services', 'weather.json')
@@ -35,6 +37,17 @@ def setup_scrapers(port):
    
    weather_scraper = common_scrapers.CommonScraper('weather', tcp_server=scraper_server)
    weather_scraper.add_source(openweather_source)
+   
+   #sports scraper
+   sports_fp = os.path.join(config.DIRNAME, 'services', 'sports.json')
+   sports_sources = ujson.loads(open(sports_fp, 'r').read())['sources']
+   
+   fb_db_source = common_sources.WebpageSource.load_from_spec(sports_sources[0], io_loop=io_loop, http_client=http_client)
+   theguardian_st_source = common_sources.WebpageSource.load_from_spec(sports_sources[1], io_loop=io_loop, http_client=http_client)
+
+   sports_scraper = common_scrapers.CommonScraper('sports', tcp_server=scraper_server)
+   sports_scraper.add_source(fb_db_source)
+   sports_scraper.add_source(theguardian_st_source)
 
 def run(run_config=None):
    signal.signal(signal.SIGINT, handle_signal)

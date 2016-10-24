@@ -11,12 +11,15 @@ class CommonSource(object):
    _source_type = None
    def __init__(self, name=None, description=None, url_pattern=None,
                       req_timeout=None, conn_timeout=None, proxy=None,
-                      start_time=None, stop_time=None, io_loop=None, http_client=None):
+                      start_time=None, stop_time=None, io_loop=None, http_client=None,
+                      user_agent=None):
 
       self._req_timeout = req_timeout if req_timeout else 5
       self._conn_timeout = conn_timeout if conn_timeout else 5
       # TODO: randomize proxy
       self._proxy = proxy
+      
+      self._user_agent = 'Mozilla/5.0' if not user_agent else user_agent
 
       self._default_interval = datetime.timedelta(seconds=15)
       self._start_time = start_time
@@ -50,7 +53,8 @@ class CommonSource(object):
                                       connect_timeout=self._conn_timeout,
                                       request_timeout=self._req_timeout,
                                       proxy_host=proxy_host,
-                                      proxy_port=proxy_port)
+                                      proxy_port=proxy_port,
+                                      user_agent=self._user_agent)
 
          response = yield self.http_client.fetch(req)
 
@@ -63,11 +67,13 @@ class CommonSource(object):
    
    def source_type(self):
       return self._source_type
-
+   
+   #from raw_data to dict/object etc
    def parse(self, raw_data):
       raise NotImplementedError
-
-   def query(self, cmd):
+   
+   #filter parsed object
+   def query(self, *args, **kwargs):
       raise NotImplementedError
 
    def get_url(self, **kwargs):
@@ -179,11 +185,11 @@ class WebpageSource(CommonSource):
    _source_type='webpage'
 
    def __init__(self, parser, **kwargs):
-      super(JSONSource, self).__init__(**kwargs)      
+      super(WebpageSource, self).__init__(**kwargs)
       self._parser = parser
    
    @classmethod
-   def load_from_spec(cls, spec):
+   def load_from_spec(cls, spec, io_loop=None, http_client=None):
       logging.debug('loading new WebpageSource object from spec')
       try:
          stype = spec.pop('type')
@@ -193,12 +199,14 @@ class WebpageSource(CommonSource):
          parser = webpage_parsers.load(name)
 
          logging.debug('loaded source using {} parser'.format(name))
-         return WebpageSource(parser, **spec)
+         return WebpageSource(parser, io_loop=io_loop, http_client=http_client, **spec)
       except Exception, e:
          raise
 
    def parse(self, raw_data):
-      pass
-
-   def query(self, *args, **kwargs):
-      pass
+      data = self._parser.parse(raw_data)
+      return data
+   
+   def query(self, obj, **kwargs):
+      output = self._parser.query(obj, **kwargs)
+      return output

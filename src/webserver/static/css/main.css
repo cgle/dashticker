@@ -83,7 +83,7 @@ body {
 
 /* chatbox */
 .chatbox {
-   width: 75%;
+   width: 100%;
    margin: auto;
 }
 
@@ -112,23 +112,24 @@ body {
 .chatbox-output {
    border: 1px solid #333;
    display: block;
-   height: 70%;
-   max-height: 70%;
+   height: 80%;
+   max-height: 80%;
    overflow: scroll;
-   border-radius: 4px;   
+   border-radius: 4px;
+   padding-left: 10px;
+   padding-right: 10px;
 }
 
-.chatbox-output table {
+.chatbox-output .output-table {
    width: 100%;
 }
 
-.chatbox-output table tr {
+.chatbox-output .output-table > tbody tr {
    width: 100%;
-   display: inherit;
    margin-bottom: 5px;
 }
 
-.chatbox-output table .msg {
+.chatbox-output .output-table .msg {
    padding-top:7px;
    padding-bottom:7px;
    border-radius: 8px;
@@ -136,13 +137,13 @@ body {
    padding-right: 20px;
 }
 
-.chatbox-output table td.msg.user {
+.chatbox-output .output-table td.msg.user {
    float: left;
    background: #F2508F;
    color: white;
 }
 
-.chatbox-output table td.msg.bot {
+.chatbox-output .output-table td.msg.bot {
    padding-left: 10px;
    float:right;
    background: #ddd;

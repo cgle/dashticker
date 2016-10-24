@@ -82,7 +82,7 @@ class CommonBot(object):
             logger.debug('READING FROM BRIDGE {} bytes'.format(len(data)))
             output_msg = self.msg_factory.decode_output(data)
             bot_hid = output_msg.bot_hid
-            msg = output_msg.msg      
+            msg = output_msg.msg
             yield self.send_message_to_client(bot_hid, msg)
       except iostream.StreamClosedError, e:
          logger.error(e)

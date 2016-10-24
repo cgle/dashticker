@@ -96,7 +96,7 @@ class ScraperTCPServer(tcpserver.TCPServer):
          output_msg = ujson.dumps(out)
       
       except AttributeError, e:
-         output_msg = 'unable to fetch data, please try again'
+         output_msg = 'unable to fetch data, please try again. Error {}'.format(e)
 
       except Exception, e:
          output_msg = str(e)

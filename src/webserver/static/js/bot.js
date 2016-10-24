@@ -3,7 +3,7 @@ $(function() {
    var $input = $('input[name="chatbox-input-text"]');
    var $send_button = $('input[name="chatbot-input-send"]');
    var chatbox_output = document.getElementById('chatbox-output');
-   var $output_table = $('#chatbox-output table');
+   var $output_table = $('#chatbox-output .output-table > tbody');
 
    ws = new WebSocket("ws://localhost:8000/ws/bot");
 
@@ -39,8 +39,13 @@ $(function() {
          var msgs = generate_msgs(msg);
          row = msgs.join('');
       }
-
-      $output_table.append(row);
+      
+      var last_tr = $output_table.find('>tr:last-child');
+      if (!last_tr.length) {
+         $output_table.append(row);
+      } else {
+         last_tr.after(row);
+      }
 
       // reset height auto
       chatbox_output.scrollTop = chatbox_output.scrollHeight;

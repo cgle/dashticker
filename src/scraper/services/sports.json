@@ -1,5 +1,55 @@
 {
    "sources": [
+      {
+         "proxy": {
+            "host": null,
+            "port": null
+         },
+         "url_pattern": "http://footballdatabase.com/league-scores-tables/{league}-{season}",
+         "name": "fb_db_standings",
+         "parser": "fb_db",
+         "type": "webpage"
+      },
+      {
+         "proxy": {
+            "host": null,
+            "port": null
+         },
+         "url_pattern": "https://www.theguardian.com/football/{league}/table",
+         "name": "theguardian_standings",
+         "parser": "theguardian_standings",
+         "type": "webpage"
+      },
+      {
+         "proxy": {
+            "host": null,
+            "port": null
+         },
+         "url_pattern": "http://www.sportinglife.com/football/{league}/teams",
+         "name": "sportinglife_teams",
+         "parser": "sportinglife_teams",
+         "type": "webpage"
+      },      
+      {
+         "proxy": {
+            "host": null,
+            "port": null
+         },
+         "url_pattern": "http://www.sportinglife.com/football/{league}/results",
+         "name": "sportinglife_results",
+         "parser": "sportinglife_results",
+         "type": "webpage"
+      },
+      {
+         "proxy": {
+            "host": null,
+            "port": null
+         },
+         "url_pattern": "http://www.sportinglife.com/football/{league}/fixtures",
+         "name": "sportinglife_fixtures",
+         "parser": "sportinglife_fixtures",
+         "type": "webpage"
+      }      
    ]
 }
 
