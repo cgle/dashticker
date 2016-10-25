@@ -29,7 +29,7 @@
          "name": "sportinglife_teams",
          "parser": "sportinglife_teams",
          "type": "webpage"
-      },      
+      },
       {
          "proxy": {
             "host": null,

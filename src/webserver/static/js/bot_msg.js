@@ -35,7 +35,9 @@ var bot_msg_types = {
    'openweather_by_city': WeatherMsg,
    'finviz_stock_info': FinvizInfoMsg,
    'fb_db_standings': FBDBMsg,
-   'theguardian_standings': TheGuardianStandingsMsg
+   'theguardian_standings': TheGuardianStandingsMsg,
+   'sportinglife_fixtures': SportingLifeFixturesMsg,
+   'sportinglife_results': SportingLifeResultsMsg
 }
 
 function render_generic_msg(msg) {
@@ -332,6 +334,122 @@ function TheGuardianStandingsMsg(msg) {
          });
       }
       
+      return build_msg_card(config);
+   }
+
+   $.extend(this, {
+      'render': render
+   });
+}
+
+function SportingLifeFixturesMsg(msg) {
+   var msg = msg;
+
+   function render() {
+      var game_days = msg.game_days;
+      var config = {
+         width: 600,
+         num_cols: 10,
+         items: [],
+         style: {
+            'max-height': '300px',
+            'overflow-y': 'scroll',
+            'width': '650px' //50px extra for scroll
+         }
+      }
+
+      var table_style = 'text-align:left; padding: 3px; width:100%; font-size:13px';
+      for (var i=0; i < game_days.length; i++) {
+         var game_day = game_days[i];      
+         var date = game_day.date;
+         var games = game_day.games;
+      
+         var ths = ['time', 'home', 'away'];
+         var rows_data = [];
+
+         for (var j=0; j<games.length; j++) {
+            var game = games[j];
+            rows_data.push([game.time, game.teams[0], game.teams[1]]);
+         }
+      
+         config.items.push({
+            dimension: [1,10],
+            field: 'game_day',
+            text: '<b>' + date + '</b>',
+            style: {'text-align': 'center'}
+         });
+         
+         config.items.push({
+            dimension: [10,10],
+            text: build_table(ths, rows_data, table_style),
+            field: 'fixtures',
+            style: {'height': 'auto'}
+         });
+      }
+      
+      return build_msg_card(config);
+   }
+
+   $.extend(this, {
+      'render': render
+   });
+}
+
+
+function SportingLifeResultsMsg(msg) {
+   var msg = msg;
+
+   function render() {
+      var game_days = msg.game_days;
+      var config = {
+         width: 600,
+         num_cols: 12,
+         items: [],
+         style: {
+            'max-height': '300px',
+            'overflow-y': 'scroll',
+            'width': '650px', //50px extra for scroll
+            'font-size': '13px'
+         }
+      }
+      
+      console.log(game_days);
+      for (var i=0; i<game_days.length; i++) {
+         var game_day = game_days[i];
+         var date = game_day.date;
+         var games = game_day.games;      
+
+         config.items.push({
+            dimension: [1,12],
+            field: 'game_day',
+            text: '<b>' + date + '</b>',
+            style: {'text-align': 'center'}
+         });
+
+         for (var j=0; j<games.length; j++) {
+            var game = games[j];
+            var game_items = [
+               {
+                  dimension: [1,5],
+                  field: 'home_team',
+                  text: game.teams[0][0]
+               },
+               {
+                  dimension: [1,2],
+                  field: 'score',
+                  text: game.teams[0][2] + ' - ' + game.teams[1][2],
+                  style: {'font-size': '14px', 'font-weight': '600'}
+               },
+               {
+                  dimension: [1,5],
+                  field: 'away_team',
+                  text: game.teams[1][0]
+               }
+            ];
+            config.items = [].concat.apply(config.items, game_items);
+         }     
+      }     
+
       return build_msg_card(config);
    }
 

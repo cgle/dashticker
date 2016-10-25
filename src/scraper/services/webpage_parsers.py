@@ -118,6 +118,56 @@ class TheGuardianStandingParser(DefaultParser):
 
       return [ths] + trs
 
+
+class SportingLifeResultsParser(DefaultParser):
+   _sl_sections_xpath = lxml.etree.XPath('//section[@class="fr-gp"]')
+
+   def __init__(self):
+      pass
+
+   def parse(self, raw_data):
+      tree = lxml.html.fromstring(raw_data)
+      sections = self._sl_sections_xpath(tree)
+      
+      return {'game_days': [self.strip_section(section) for section in sections]}
+
+   @staticmethod
+   def strip_section(el):
+      date = el.cssselect('h3.hdr.t2')[0].text_content()
+      def strip_game(t):
+         team = t.cssselect('h4')[0].text_content()
+         scorers = filter(lambda y: y, [x.strip() for x in t.cssselect('p')[0].text_content().split('\n')])
+         return (team,scorers,len(scorers))
+
+      games = [{'teams': [strip_game(t) for t in game.cssselect('.ixxt .ixx')]
+              } for game in el.cssselect('li.fr-res')]
+      return {'date': date, 'games': games}
+
+class SportingLifeFixturesParser(DefaultParser):
+   _sl_sections_xpath = lxml.etree.XPath('//section[@class="fr-gp"]')
+
+   def __init__(self):
+      pass
+
+   def parse(self, raw_data):
+      tree = lxml.html.fromstring(raw_data)
+      sections = self._sl_sections_xpath(tree)
+      
+      return {'game_days': [self.strip_section(section) for section in sections]}
+
+   @staticmethod
+   def strip_section(el):
+      date = el.cssselect('h3.hdr.t2')[0].text_content()
+      def strip_game(t):
+         team = t.cssselect('a:not(.ixb.mobile-hdn)')[0].text_content()
+         return team
+
+      games = [{'teams': [strip_game(t) for t in game.cssselect('div.ix.ixf')],
+                'time': game.cssselect('div.ix.ixt')[0].text_content()
+              } for game in el.cssselect('li.fr-fix')]
+
+      return {'date': date, 'games': games}
+
 # init parser instances
 WEBPAGE_PARSERS = {
    'default': DefaultParser(),
@@ -125,6 +175,8 @@ WEBPAGE_PARSERS = {
    'sec_doct_list': SecDocListParser(),
    'sec_report': SecReportParser(),
    'fb_db': FBDBParser(),
-   'theguardian_standings': TheGuardianStandingParser()
+   'theguardian_standings': TheGuardianStandingParser(),
+   'sportinglife_results': SportingLifeResultsParser(),
+   'sportinglife_fixtures': SportingLifeFixturesParser()
 }   
 

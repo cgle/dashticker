@@ -20,7 +20,9 @@ sources_map = {
    'finviz_stock_info': 'finance',
    'openweather_by_city': 'weather',
    'fb_db_standings': 'sports',
-   'theguardian_standings': 'sports'
+   'theguardian_standings': 'sports',
+   'sportinglife_results': 'sports',
+   'sportinglife_fixtures': 'sports'
 }
 
 fb_db_leagues = {
@@ -40,6 +42,18 @@ theguardian_leagues = {
    'ligue 1': 'ligue1football',
    'serie a': 'serieafootball',
    'europa': 'uefa-europa-league',   
+}
+
+sportinglife_leagues = {
+   'epl': 'premier-league',
+   'ucl': 'champions-league',
+   'serie a': 'serie-a',
+   'bundesliga': 'bundesliga',
+   'ligue 1': 'ligue-1',
+   'laliga': 'la-liga',
+   'eredivisie': 'eredivisie',
+   'fa-cup': 'fa-cup',
+   'europa': 'europa-league'
 }
 
 class TextAnalyzer(object):
@@ -79,6 +93,16 @@ class TextAnalyzer(object):
          source_name = 'theguardian_standings'
          league = theguardian_leagues[k]
          fetch_kwargs = {'league': league}
+      elif 'result' in msg:
+         k = msg.split()[0]
+         source_name = 'sportinglife_results'
+         league = sportinglife_leagues[k]
+         fetch_kwargs = {'league': league}
+      elif 'fixture' in msg:
+         k = msg.split()[0]
+         source_name = 'sportinglife_fixtures'
+         league = sportinglife_leagues[k]
+         fetch_kwargs = {'league': league}         
       else:
          items = re.findall(r"[\w']+", msg)
          for item in items:

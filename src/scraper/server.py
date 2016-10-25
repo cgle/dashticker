@@ -44,10 +44,14 @@ def setup_scrapers(port):
    
    fb_db_source = common_sources.WebpageSource.load_from_spec(sports_sources[0], io_loop=io_loop, http_client=http_client)
    theguardian_st_source = common_sources.WebpageSource.load_from_spec(sports_sources[1], io_loop=io_loop, http_client=http_client)
+   sportinglife_rs_source = common_sources.WebpageSource.load_from_spec(sports_sources[3], io_loop=io_loop, http_client=http_client)
+   sportinglife_fx_source = common_sources.WebpageSource.load_from_spec(sports_sources[4], io_loop=io_loop, http_client=http_client)
 
    sports_scraper = common_scrapers.CommonScraper('sports', tcp_server=scraper_server)
    sports_scraper.add_source(fb_db_source)
    sports_scraper.add_source(theguardian_st_source)
+   sports_scraper.add_source(sportinglife_rs_source)
+   sports_scraper.add_source(sportinglife_fx_source)
 
 def run(run_config=None):
    signal.signal(signal.SIGINT, handle_signal)
