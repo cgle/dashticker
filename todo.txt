@@ -1,0 +1,16 @@
+TODO:
+1. cache fetched results in 5-10 min span
+   - short/longer depending on content( e.g: fixtures/results: monthly, temp: hourly etc)
+2. auto fetch data timer
+3. batched request per command (e,g: AAPL => fetch both googleapi + finviz)
+4. UI to add new source, customize commands and msg cards
+5. use css class for msg cards
+6. add more ui components: list, slider, tabs, popup
+7. youtube,yelp,google map support
+8. a structural way to hook up 3rd party apis
+9. use message queues between processes
+10. polish mobile web UI
+11. hook into facebook/telegram/kik/line messengers
+12. write tests ...
+13. add utility in /src for common util functions/classes
+14. deploy alpha version
