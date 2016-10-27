@@ -3,7 +3,7 @@ import config
 import datetime
 from tornado import netutil, ioloop, process, httpclient, gen
 import uvloop
-from services import common_sources, common_scrapers, scraper_tcp_server
+from modules import common_sources, common_scrapers, scraper_tcp_server
 
 logger = logging.getLogger(__name__)
 ioloop.IOLoop.configure(uvloop.UVLoop)
@@ -21,7 +21,7 @@ def setup_scrapers(port):
    scraper_server.listen(port)
   
    #finance scraper
-   finance_fp = os.path.join(config.DIRNAME, 'services', 'finance.json')   
+   finance_fp = os.path.join(config.DIRNAME, 'modules', 'finance.json')   
    finance_sources = ujson.loads(open(finance_fp, 'r').read())['sources']   
    google_source = common_sources.JSONSource.load_from_spec(finance_sources[0], io_loop=io_loop, http_client=http_client)
    finviz_source = common_sources.WebpageSource.load_from_spec(finance_sources[1], io_loop=io_loop, http_client=http_client)
@@ -31,7 +31,7 @@ def setup_scrapers(port):
    finance_scraper.add_source(finviz_source)
 
    #weather scraper
-   weather_fp = os.path.join(config.DIRNAME, 'services', 'weather.json')
+   weather_fp = os.path.join(config.DIRNAME, 'modules', 'weather.json')
    weather_sources = ujson.loads(open(weather_fp, 'r').read())['sources']
    openweather_source = common_sources.JSONSource.load_from_spec(weather_sources[0], io_loop=io_loop, http_client=http_client)
    
@@ -39,7 +39,7 @@ def setup_scrapers(port):
    weather_scraper.add_source(openweather_source)
    
    #sports scraper
-   sports_fp = os.path.join(config.DIRNAME, 'services', 'sports.json')
+   sports_fp = os.path.join(config.DIRNAME, 'modules', 'sports.json')
    sports_sources = ujson.loads(open(sports_fp, 'r').read())['sources']
    
    fb_db_source = common_sources.WebpageSource.load_from_spec(sports_sources[0], io_loop=io_loop, http_client=http_client)

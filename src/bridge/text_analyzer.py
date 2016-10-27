@@ -30,8 +30,8 @@ fb_db_leagues = {
    'laliga': 'spain-liga-bbva',
    'bundesliga': 'germany-bundesliga',
    'sweden': 'sweden-allsvenskan',
-   'ligue 1': 'france-ligue-1',
-   'serie a': 'italy-serie-a'
+   'l1': 'france-ligue-1',
+   'seriea': 'italy-serie-a'
 }
 
 theguardian_leagues = {
@@ -39,8 +39,8 @@ theguardian_leagues = {
    'ucl': 'championsleague',
    'laliga': 'laligafootball',
    'bundesliga': 'bundesligafootball',
-   'ligue 1': 'ligue1football',
-   'serie a': 'serieafootball',
+   'l1': 'ligue1football',
+   'seriea': 'serieafootball',
    'europa': 'uefa-europa-league',   
 }
 
@@ -49,10 +49,10 @@ sportinglife_leagues = {
    'ucl': 'champions-league',
    'serie a': 'serie-a',
    'bundesliga': 'bundesliga',
-   'ligue 1': 'ligue-1',
+   'l1': 'ligue-1',
    'laliga': 'la-liga',
    'eredivisie': 'eredivisie',
-   'fa-cup': 'fa-cup',
+   'facup': 'fa-cup',
    'europa': 'europa-league'
 }
 

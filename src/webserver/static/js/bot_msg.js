@@ -413,7 +413,6 @@ function SportingLifeResultsMsg(msg) {
          }
       }
       
-      console.log(game_days);
       for (var i=0; i<game_days.length; i++) {
          var game_day = game_days[i];
          var date = game_day.date;

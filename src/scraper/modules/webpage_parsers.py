@@ -159,7 +159,7 @@ class SportingLifeFixturesParser(DefaultParser):
    def strip_section(el):
       date = el.cssselect('h3.hdr.t2')[0].text_content()
       def strip_game(t):
-         team = t.cssselect('a:not(.ixb.mobile-hdn)')[0].text_content()
+         team = t.cssselect(':not(.ixb.mobile-hdn)')[0].text_content()
          return team
 
       games = [{'teams': [strip_game(t) for t in game.cssselect('div.ix.ixf')],

@@ -14,3 +14,6 @@ TODO:
 12. write tests ...
 13. add utility in /src for common util functions/classes
 14. deploy alpha version
+
+15. proxy pool
+16. credentials

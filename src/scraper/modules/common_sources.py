@@ -210,3 +210,20 @@ class WebpageSource(CommonSource):
    def query(self, obj, **kwargs):
       output = self._parser.query(obj, **kwargs)
       return output
+
+class RSSSource(CommonSource):
+   _source_type='rss'
+
+   def __init__(self, **kwargs):
+      super(RSSSource, self).__init__(**kwargs)
+   
+   @classmethod
+   def load_from_spec(cls, spec, io_loop=None, http_client=None):
+      pass
+
+   def parse(self, raw_data):
+      pass
+
+   def query(self, obj, **kwargs):
+      pass
+
