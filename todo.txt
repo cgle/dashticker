@@ -17,3 +17,4 @@ TODO:
 
 15. proxy pool
 16. credentials
+17. setup new dashticker V2
